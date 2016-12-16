@@ -4,3 +4,9 @@
 
 # quota-limits-generator
 A tool to generate YAML files for OCP quotas and limits based of pre-defined inputs.
+
+## Build
+mvn clean install
+
+## Run
+java -jar target/quota-limits-generator-parent-1.0.0-SNAPSHOT-jar-with-dependencies.jar --instance-type small
