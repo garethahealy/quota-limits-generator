@@ -19,8 +19,14 @@
  */
 package com.garethahealy.quotalimitsgenerator.cli.parsers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -28,6 +34,9 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 public class DefaultCLIParser {
 
@@ -39,11 +48,21 @@ public class DefaultCLIParser {
 
     public Options getOptions() {
         //Setup the options we can use on the command line
-        Option dbDriverOption = new Option("it", "instance-type", true,
-                                           "Instance type, i.e.: small, medium");
+        Option instanceTypeCsv = new Option("csv", "instance-type-csv", true, "Instance type csv information");
+        Option instanceType = new Option("it", "instance-type", true, "Instance type, i.e.: small, medium");
+        Option nodeCores = new Option("nc", "node-cores", true, "Number of cores on smallest node, i.e.: 4");
+        Option nodeMemory = new Option("nm", "node-memory", true, "Amount of memory in GB on smallest node, i.e.: 8");
+        Option nodeReservedCores = new Option("nrc", "node-reserved-cores", true, "Number of cores reserved on a node by OCP, i.e. 1");
+        Option nodeReservedMemory = new Option("nrm", "node-reserved-memory", true, "Amount of memory in GB reserved on a node by OCP, i.e.: 1");
+
 
         Options options = new Options();
-        options.addOption(dbDriverOption);
+        options.addOption(instanceTypeCsv);
+        options.addOption(instanceType);
+        options.addOption(nodeCores);
+        options.addOption(nodeMemory);
+        options.addOption(nodeReservedCores);
+        options.addOption(nodeReservedMemory);
 
         return options;
     }
@@ -69,9 +88,25 @@ public class DefaultCLIParser {
         }
     }
 
-    public Model getModel(CommandLine line) {
-        String instance = line.getOptionValue("instance-type");
+    public CLIModel getModel(CommandLine line) throws NumberFormatException, IOException, ParseException {
+        String instanceTypeCsv = line.getOptionValue("instance-type-csv");
+        String instanceType = line.getOptionValue("instance-type");
+        Integer nodeCores = Integer.parseInt(line.getOptionValue("node-cores"));
+        Integer nodeMemory = Integer.parseInt(line.getOptionValue("node-memory"));
+        Integer nodeReservedCores = Integer.parseInt(line.getOptionValue("node-reserved-cores"));
+        Integer nodeReservedMemory = Integer.parseInt(line.getOptionValue("node-reserved-memory"));
 
-        return new Model(instance);
+        CSVParser parser = CSVFormat.DEFAULT.parse(
+            new BufferedReader(new InputStreamReader(new FileInputStream(new File(instanceTypeCsv)), Charset.forName("UTF-8"))));
+
+        List<CSVRecord> lines = parser.getRecords();
+
+        parser.close();
+
+        if (lines == null || lines.size() <= 0) {
+            throw new ParseException("instance-type-csv data is empty");
+        }
+        
+        return new CLIModel(lines, instanceType, nodeCores, nodeMemory, nodeReservedCores, nodeReservedMemory);
     }
 }

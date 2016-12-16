@@ -19,16 +19,16 @@
  */
 package com.garethahealy.quotalimitsgenerator.cli;
 
-import java.util.Map;
+import java.io.IOException;
 
 import com.garethahealy.quotalimitsgenerator.cli.parsers.DefaultCLIParser;
-import com.garethahealy.quotalimitsgenerator.cli.parsers.Model;
+import com.garethahealy.quotalimitsgenerator.cli.parsers.CLIModel;
+import com.garethahealy.quotalimitsgenerator.cli.parsers.QuotaLimitModel;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +43,15 @@ public class Application {
 
         try {
             CommandLine commandLine = parser.parse(args, parser.getOptions());
-            Model options = parser.getModel(commandLine);
+            CLIModel options = parser.getModel(commandLine);
 
             LOG.info(options.toString());
 
-        } catch (ParseException ex) {
+            QuotaLimitModel quotaLimitModel = options.calculate();
+
+            LOG.info(quotaLimitModel.toString());
+
+        } catch (IOException | ParseException | NumberFormatException ex) {
             LOG.error("We hit a problem! {}", ExceptionUtils.getStackTrace(ex));
 
             parser.displayHelp(false);

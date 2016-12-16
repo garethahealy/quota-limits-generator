@@ -1,0 +1,10 @@
+Group,Name,CPU (Core),Mem (Gi)
+Small,micro,1,2
+,small,2,4
+,small.x2,4,4
+Medium,medium,6,6
+,medium.x2,8,8
+,large,10,12
+Large,large.x2,12,14
+,xlarge,14,16
+,xlarge.x2,16,18
