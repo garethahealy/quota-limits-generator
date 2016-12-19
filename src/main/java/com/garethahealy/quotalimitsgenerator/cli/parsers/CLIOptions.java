@@ -19,65 +19,56 @@
  */
 package com.garethahealy.quotalimitsgenerator.cli.parsers;
 
-import java.util.List;
+import java.net.URI;
+import java.util.Map;
 
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class CLIModel {
+public class CLIOptions {
 
-    private List<CSVRecord> lines;
+    private Map<String, Pair<Integer, Integer>> lines;
     private String instanceType;
     private Integer nodeCores;
     private Integer nodeMemory;
     private Integer nodeReservedCores;
     private Integer nodeReservedMemory;
+    private URI outputPath;
 
-    public CLIModel() {
-
-    }
-
-    public CLIModel(List<CSVRecord> lines, String instanceType, Integer nodeCores, Integer nodeMemory, Integer nodeReservedCores, Integer nodeReservedMemory) {
+    public CLIOptions(Map<String, Pair<Integer, Integer>> lines, String instanceType, Integer nodeCores, Integer nodeMemory, Integer nodeReservedCores,
+                      Integer nodeReservedMemory, URI outputPath) {
         this.lines = lines;
         this.instanceType = instanceType;
         this.nodeCores = nodeCores;
         this.nodeMemory = nodeMemory;
         this.nodeReservedCores = nodeReservedCores;
         this.nodeReservedMemory = nodeReservedMemory;
+        this.outputPath = outputPath;
     }
 
     public QuotaLimitModel calculate() {
-        CSVRecord instanceTypeLine = find();
+        Pair<Integer, Integer> instanceTypeLine = lines.get(instanceType);
 
-        Integer instanceCore = Integer.parseInt(instanceTypeLine.get(2));
-        Integer instanceMemory = Integer.parseInt(instanceTypeLine.get(3));
+        Integer instanceCore = instanceTypeLine.getLeft();
+        Integer instanceMemory = instanceTypeLine.getRight();
+
+        Integer allocatableNodeCores = nodeCores - nodeReservedCores;
+        Integer allocatableNodeMemory = nodeMemory - nodeReservedMemory;
+
+        Integer instanceCoreOrNodeCore = instanceCore > allocatableNodeCores ? allocatableNodeCores : instanceCore;
+        Integer instanceMemoryOrNodeMemory = instanceMemory > allocatableNodeMemory ? allocatableNodeMemory : instanceMemory;
 
         QuotaLimitModel quotaLimitModel = new QuotaLimitModel();
-        quotaLimitModel.setAllocatableNodeCores(nodeCores - nodeReservedCores);
-        quotaLimitModel.setAllocatableNodeMemory(nodeMemory - nodeReservedMemory);
+        quotaLimitModel.setAllocatableNodeCores(allocatableNodeCores);
+        quotaLimitModel.setAllocatableNodeMemory(allocatableNodeMemory);
         quotaLimitModel.setMaxPods(((instanceMemory * 1000) / 500) + 3);
-
-        Integer instanceCoreOrNodeCore = instanceCore > quotaLimitModel.getAllocatableNodeCores() ? quotaLimitModel.getAllocatableNodeCores() : instanceCore;
-        Integer instanceMemoryOrNodeMemory = instanceMemory > quotaLimitModel.getAllocatableNodeMemory() ? quotaLimitModel.getAllocatableNodeMemory() : instanceMemory;
-
         quotaLimitModel.setTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 30);
         quotaLimitModel.setTerminatingPodMemory(((instanceMemoryOrNodeMemory * 1000) / 100) * 30);
         quotaLimitModel.setMaxOrNotTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 80);
         quotaLimitModel.setMaxOrNotTerminatingPodMemory(((instanceMemoryOrNodeMemory * 1000) / 100) * 80);
+        quotaLimitModel.setOutputPath(outputPath);
 
         return quotaLimitModel;
-    }
-
-    private CSVRecord find() {
-        CSVRecord answer = null;
-        for (CSVRecord current : lines) {
-            if (current.get(1).equalsIgnoreCase(instanceType)) {
-                answer = current;
-                break;
-            }
-        }
-
-        return answer;
     }
 
     @Override

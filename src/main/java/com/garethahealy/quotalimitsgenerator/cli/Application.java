@@ -20,10 +20,12 @@
 package com.garethahealy.quotalimitsgenerator.cli;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
+import com.garethahealy.quotalimitsgenerator.cli.parsers.CLIOptions;
 import com.garethahealy.quotalimitsgenerator.cli.parsers.DefaultCLIParser;
-import com.garethahealy.quotalimitsgenerator.cli.parsers.CLIModel;
 import com.garethahealy.quotalimitsgenerator.cli.parsers.QuotaLimitModel;
+import com.garethahealy.quotalimitsgenerator.cli.parsers.YamlTemplateProcessor;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -31,6 +33,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import freemarker.template.TemplateException;
 
 public class Application {
 
@@ -43,7 +47,7 @@ public class Application {
 
         try {
             CommandLine commandLine = parser.parse(args, parser.getOptions());
-            CLIModel options = parser.getModel(commandLine);
+            CLIOptions options = parser.getParsedOptions(commandLine);
 
             LOG.info(options.toString());
 
@@ -51,7 +55,11 @@ public class Application {
 
             LOG.info(quotaLimitModel.toString());
 
-        } catch (IOException | ParseException | NumberFormatException ex) {
+            YamlTemplateProcessor yamlTemplateProcessor = new YamlTemplateProcessor();
+            yamlTemplateProcessor.init();
+
+            yamlTemplateProcessor.process(quotaLimitModel);
+        } catch (NumberFormatException | IOException | ParseException | URISyntaxException | TemplateException ex) {
             LOG.error("We hit a problem! {}", ExceptionUtils.getStackTrace(ex));
 
             parser.displayHelp(false);

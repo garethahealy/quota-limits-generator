@@ -9,6 +9,7 @@ A tool to generate YAML files for OCP quotas and limits based of pre-defined inp
 mvn clean install
 
 ## Run
-java -jar target/quota-limits-generator-parent-1.0.0-SNAPSHOT-jar-with-dependencies.jar \
-    --instance-type-csv data/instancetypes.csv --instance-type small \
-    --node-cores 4 --node-memory 8 --node-reserved-cores 1 --node-reserved-memory 2
+java -jar target/quota-limits-generator-parent-*-jar-with-dependencies.jar \
+    --instance-type-csv file:$(PWD)/data/instancetypes.csv --instance-type small \
+    --node-cores 4 --node-memory 8 --node-reserved-cores 1 --node-reserved-memory 2 \
+    --output ${PWD}/output

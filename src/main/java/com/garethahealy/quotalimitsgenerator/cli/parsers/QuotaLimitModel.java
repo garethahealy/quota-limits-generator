@@ -19,6 +19,8 @@
  */
 package com.garethahealy.quotalimitsgenerator.cli.parsers;
 
+import java.net.URI;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class QuotaLimitModel {
@@ -30,20 +32,10 @@ public class QuotaLimitModel {
     private Integer terminatingPodMemory;
     private Integer maxOrNotTerminatingPodCPU;
     private Integer maxOrNotTerminatingPodMemory;
+    private URI outputPath;
 
     public QuotaLimitModel() {
 
-    }
-
-    public QuotaLimitModel(Integer allocatableNodeCores, Integer allocatableNodeMemory, Integer maxPods, Integer terminatingPodCPU, Integer terminatingPodMemory,
-                           Integer maxOrNotTerminatingPodCPU, Integer maxOrNotTerminatingPodMemory) {
-        this.allocatableNodeCores = allocatableNodeCores;
-        this.allocatableNodeMemory = allocatableNodeMemory;
-        this.maxPods = maxPods;
-        this.terminatingPodCPU = terminatingPodCPU;
-        this.terminatingPodMemory = terminatingPodMemory;
-        this.maxOrNotTerminatingPodCPU = maxOrNotTerminatingPodCPU;
-        this.maxOrNotTerminatingPodMemory = maxOrNotTerminatingPodMemory;
     }
 
     public Integer getAllocatableNodeCores() {
@@ -102,6 +94,14 @@ public class QuotaLimitModel {
         this.maxOrNotTerminatingPodMemory = maxOrNotTerminatingPodMemory;
     }
 
+    public URI getOutputPath() {
+        return outputPath;
+    }
+
+    public void setOutputPath(URI outputPath) {
+        this.outputPath = outputPath;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -112,6 +112,7 @@ public class QuotaLimitModel {
             .append("terminatingPodMemory", terminatingPodMemory)
             .append("maxOrNotTerminatingPodCPU", maxOrNotTerminatingPodCPU)
             .append("maxOrNotTerminatingPodMemory", maxOrNotTerminatingPodMemory)
+            .append("outputPath", outputPath)
             .toString();
     }
 }
