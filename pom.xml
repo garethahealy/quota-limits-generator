@@ -12,7 +12,7 @@
     <groupId>com.garethahealy.quota-limits-generator</groupId>
     <artifactId>quota-limits-generator-parent</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>GarethHealy :: Quota Limits Generator</name>
 
     <scm>
