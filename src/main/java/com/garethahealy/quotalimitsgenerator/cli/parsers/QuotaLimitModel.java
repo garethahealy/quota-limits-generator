@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Quota Limits Generator
  * %%
- * Copyright (C) 2013 - 2016 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class QuotaLimitModel {
 
+    private String qualityOfService;
     private Integer allocatableNodeCores;
     private Integer allocatableNodeMemory;
     private Integer maxPods;
@@ -32,10 +33,20 @@ public class QuotaLimitModel {
     private Integer terminatingPodMemory;
     private Integer maxOrNotTerminatingPodCPU;
     private Integer maxOrNotTerminatingPodMemory;
+    private Integer cpuRequestRatio = 3;
+    private Integer memoryRequestRatio = 3;
     private URI outputPath;
 
     public QuotaLimitModel() {
 
+    }
+
+    public String getQualityOfService() {
+        return qualityOfService;
+    }
+
+    public void setQualityOfService(String qualityOfService) {
+        this.qualityOfService = qualityOfService;
     }
 
     public Integer getAllocatableNodeCores() {
@@ -94,6 +105,22 @@ public class QuotaLimitModel {
         this.maxOrNotTerminatingPodMemory = maxOrNotTerminatingPodMemory;
     }
 
+    public Integer getCpuRequestRatio() {
+        return cpuRequestRatio;
+    }
+
+    public void setCpuRequestRatio(Integer cpuRequestRatio) {
+        this.cpuRequestRatio = cpuRequestRatio;
+    }
+
+    public Integer getMemoryRequestRatio() {
+        return memoryRequestRatio;
+    }
+
+    public void setMemoryRequestRatio(Integer memoryRequestRatio) {
+        this.memoryRequestRatio = memoryRequestRatio;
+    }
+
     public URI getOutputPath() {
         return outputPath;
     }
@@ -105,6 +132,7 @@ public class QuotaLimitModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+            .append("qualityOfService", qualityOfService)
             .append("allocatableNodeCores", allocatableNodeCores)
             .append("allocatableNodeMemory", allocatableNodeMemory)
             .append("maxPods", maxPods)
@@ -112,6 +140,8 @@ public class QuotaLimitModel {
             .append("terminatingPodMemory", terminatingPodMemory)
             .append("maxOrNotTerminatingPodCPU", maxOrNotTerminatingPodCPU)
             .append("maxOrNotTerminatingPodMemory", maxOrNotTerminatingPodMemory)
+            .append("cpuRequestRatio", cpuRequestRatio)
+            .append("memoryRequestRatio", memoryRequestRatio)
             .append("outputPath", outputPath)
             .toString();
     }

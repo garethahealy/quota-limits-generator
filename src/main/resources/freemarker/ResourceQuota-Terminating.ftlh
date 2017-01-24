@@ -30,9 +30,11 @@ metadata:
 spec:
   hard:
     pods: 4
+    <#if model.qualityOfService == "burstable">
     requests.cpu: "${model.terminatingPodCPU?c}m"
     requests.memory: "${model.terminatingPodMemory?c}Mi"
     limits.cpu: "${model.terminatingPodCPU?c}m"
     limits.memory: "${model.terminatingPodMemory?c}Mi"
+    </#if>
   scopes:
   - Terminating

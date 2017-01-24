@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Quota Limits Generator
  * %%
- * Copyright (C) 2013 - 2016 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,19 +55,23 @@ public class DefaultCLIParser {
         //Setup the options we can use on the command line
         Option instanceTypeCsv = new Option("csv", "instance-type-csv", true, "Instance type csv information");
         Option instanceType = new Option("it", "instance-type", true, "Instance type, i.e.: small, medium");
+        Option qos = new Option("qos", "quality-of-service", true, "Quality of service required in project, i.e.: besteffort or burstable");
         Option nodeCores = new Option("nc", "node-cores", true, "Number of cores on smallest node, i.e.: 4");
         Option nodeMemory = new Option("nm", "node-memory", true, "Amount of memory in GB on smallest node, i.e.: 8");
         Option nodeReservedCores = new Option("nrc", "node-reserved-cores", true, "Number of cores reserved on a node by OCP, i.e. 1");
         Option nodeReservedMemory = new Option("nrm", "node-reserved-memory", true, "Amount of memory in GB reserved on a node by OCP, i.e.: 1");
+        Option nodeWorkerCount = new Option("nwc", "node-worker-count", true, "Number of work nodes in cluster, i.e.: 1");
         Option output = new Option("o", "output", true, "Output directory, i.e.: /tmp/quotas-and-limits");
 
         Options options = new Options();
         options.addOption(instanceTypeCsv);
         options.addOption(instanceType);
+        options.addOption(qos);
         options.addOption(nodeCores);
         options.addOption(nodeMemory);
         options.addOption(nodeReservedCores);
         options.addOption(nodeReservedMemory);
+        options.addOption(nodeWorkerCount);
         options.addOption(output);
 
         return options;
@@ -97,13 +101,15 @@ public class DefaultCLIParser {
     public CLIOptions getParsedOptions(CommandLine line) throws NumberFormatException, IOException, ParseException, URISyntaxException {
         String instanceTypeCsv = line.getOptionValue("instance-type-csv");
         String instanceType = line.getOptionValue("instance-type");
+        String qualityOfService = line.getOptionValue("quality-of-service");
         Integer nodeCores = Integer.parseInt(line.getOptionValue("node-cores"));
         Integer nodeMemory = Integer.parseInt(line.getOptionValue("node-memory"));
         Integer nodeReservedCores = Integer.parseInt(line.getOptionValue("node-reserved-cores"));
         Integer nodeReservedMemory = Integer.parseInt(line.getOptionValue("node-reserved-memory"));
+        Integer nodeWorkerCount = Integer.parseInt(line.getOptionValue("node-worker-count"));
         URI outputPath = new URI(line.getOptionValue("output"));
 
-        return new CLIOptions(parseLines(instanceTypeCsv), instanceType, nodeCores, nodeMemory, nodeReservedCores, nodeReservedMemory, outputPath);
+        return new CLIOptions(parseLines(instanceTypeCsv), instanceType, qualityOfService, nodeCores, nodeMemory, nodeReservedCores, nodeReservedMemory, nodeWorkerCount, outputPath);
     }
 
     private Map<String, Pair<Integer, Integer>> parseLines(String instanceTypeCsv) throws IOException, URISyntaxException, ParseException {

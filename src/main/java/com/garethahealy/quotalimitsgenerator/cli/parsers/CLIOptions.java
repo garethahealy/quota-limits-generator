@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Quota Limits Generator
  * %%
- * Copyright (C) 2013 - 2016 Gareth Healy
+ * Copyright (C) 2013 - 2017 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,25 @@ public class CLIOptions {
 
     private Map<String, Pair<Integer, Integer>> lines;
     private String instanceType;
+    private String qualityOfService;
     private Integer nodeCores;
     private Integer nodeMemory;
     private Integer nodeReservedCores;
     private Integer nodeReservedMemory;
+    private Integer nodeWorkerCount;
     private URI outputPath;
 
-    public CLIOptions(Map<String, Pair<Integer, Integer>> lines, String instanceType, Integer nodeCores, Integer nodeMemory, Integer nodeReservedCores,
-                      Integer nodeReservedMemory, URI outputPath) {
+    public CLIOptions(Map<String, Pair<Integer, Integer>> lines, String instanceType, String qualityOfService, Integer nodeCores, Integer nodeMemory, Integer nodeReservedCores,
+                      Integer nodeReservedMemory, Integer nodeWorkerCount, URI outputPath) {
         this.lines = lines;
         this.instanceType = instanceType;
+        this.qualityOfService = qualityOfService;
         this.nodeCores = nodeCores;
         this.nodeMemory = nodeMemory;
         this.nodeReservedCores = nodeReservedCores;
         this.nodeReservedMemory = nodeReservedMemory;
         this.outputPath = outputPath;
+        this.nodeWorkerCount = nodeWorkerCount;
     }
 
     public QuotaLimitModel calculate() {
@@ -59,9 +63,11 @@ public class CLIOptions {
         Integer instanceMemoryOrNodeMemory = instanceMemory > allocatableNodeMemory ? allocatableNodeMemory : instanceMemory;
 
         QuotaLimitModel quotaLimitModel = new QuotaLimitModel();
+
+        quotaLimitModel.setQualityOfService(qualityOfService);
         quotaLimitModel.setAllocatableNodeCores(allocatableNodeCores);
         quotaLimitModel.setAllocatableNodeMemory(allocatableNodeMemory);
-        quotaLimitModel.setMaxPods(((instanceMemory * 1000) / 500) + 3);
+        quotaLimitModel.setMaxPods(((instanceMemory * 1000) / 500) * nodeWorkerCount);
         quotaLimitModel.setTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 30);
         quotaLimitModel.setTerminatingPodMemory(((instanceMemoryOrNodeMemory * 1000) / 100) * 30);
         quotaLimitModel.setMaxOrNotTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 80);
@@ -76,11 +82,13 @@ public class CLIOptions {
         return new ToStringBuilder(this)
             .append("lines", lines)
             .append("instanceType", instanceType)
+            .append("qualityOfService", qualityOfService)
             .append("nodeCores", nodeCores)
             .append("nodeMemory", nodeMemory)
             .append("nodeReservedCores", nodeReservedCores)
             .append("nodeReservedMemory", nodeReservedMemory)
-            .append("lculate", calculate())
+            .append("nodeWorkerCount", nodeWorkerCount)
+            .append("calculate", calculate())
             .toString();
     }
 }

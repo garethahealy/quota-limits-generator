@@ -27,6 +27,7 @@ metadata:
     creation-strategy: "per-project"
     limits-calculation: "80% of instance-type total, or node total if instance-type > node"
     static-content: "false"
+<#if model.qualityOfService == "burstable">
 spec:
   hard:
     requests.cpu: "${model.maxOrNotTerminatingPodCPU?c}m"
@@ -36,3 +37,4 @@ spec:
   scopes:
   - NotTerminating
   - NotBestEffort
+</#if>

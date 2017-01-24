@@ -43,5 +43,5 @@ spec:
       cpu: "100m"
       memory: "100Mi"
     maxLimitRequestRatio:
-      cpu: 3
-      memory: 3
+      cpu: ${model.cpuRequestRatio?c}
+      memory: ${model.memoryRequestRatio?c}
