@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class QuotaLimitModel {
 
     private String qualityOfService;
+    private String instanceType;
     private Integer allocatableNodeCores;
     private Integer allocatableNodeMemory;
     private Integer maxPods;
@@ -47,6 +48,14 @@ public class QuotaLimitModel {
 
     public void setQualityOfService(String qualityOfService) {
         this.qualityOfService = qualityOfService;
+    }
+
+    public String getInstanceType() {
+        return instanceType;
+    }
+
+    public void setInstanceType(String instanceType) {
+        this.instanceType = instanceType;
     }
 
     public Integer getAllocatableNodeCores() {
@@ -133,6 +142,7 @@ public class QuotaLimitModel {
     public String toString() {
         return new ToStringBuilder(this)
             .append("qualityOfService", qualityOfService)
+            .append("instanceType", instanceType)
             .append("allocatableNodeCores", allocatableNodeCores)
             .append("allocatableNodeMemory", allocatableNodeMemory)
             .append("maxPods", maxPods)

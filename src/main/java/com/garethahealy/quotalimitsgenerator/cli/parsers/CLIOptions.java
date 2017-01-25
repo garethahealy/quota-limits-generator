@@ -63,7 +63,7 @@ public class CLIOptions {
         Integer instanceMemoryOrNodeMemory = instanceMemory > allocatableNodeMemory ? allocatableNodeMemory : instanceMemory;
 
         QuotaLimitModel quotaLimitModel = new QuotaLimitModel();
-
+        quotaLimitModel.setInstanceType(instanceType);
         quotaLimitModel.setQualityOfService(qualityOfService);
         quotaLimitModel.setAllocatableNodeCores(allocatableNodeCores);
         quotaLimitModel.setAllocatableNodeMemory(allocatableNodeMemory);

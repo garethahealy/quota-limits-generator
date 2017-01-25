@@ -22,7 +22,7 @@ kind: LimitRange
 metadata:
   name: burstable-resource-limits
   annotations:
-    instance-type: "small"
+    instance-type: "${model.instanceType}"
     applicable-strategy: "cluster-wide"
     creation-strategy: "per-project"
     limits-calculation: "80% of instance-type total, or node total if instance-type > node"

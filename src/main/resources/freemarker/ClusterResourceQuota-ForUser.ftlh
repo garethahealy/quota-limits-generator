@@ -22,7 +22,8 @@ kind: ClusterResourceQuota
 metadata:
   name: for-user
   annotations:
-    instance-type: "small"
+    instance-type: "${model.instanceType}"
+    quality-of-service: "${model.qualityOfService}"
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project-group"
     pods-calculation: "memory / 500mb + 3"

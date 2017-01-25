@@ -22,7 +22,7 @@ kind: ResourceQuota
 metadata:
   name: terminating-pod-quota
   annotations:
-    instance-type: "small"
+    instance-type: "${model.instanceType}"
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project"
     limits-calculation: "30% of instance-type total, or node total if instance-type > node"

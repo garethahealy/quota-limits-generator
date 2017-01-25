@@ -19,4 +19,5 @@ target/
 # General #
 tmp/
 *.tmp
-logs
+logs/
+output/
