@@ -25,8 +25,9 @@ metadata:
     instance-type: "${model.instanceType}"
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project"
-    limits-calculation: "30% of instance-type total, or node total if instance-type > node"
+    limits-calculation: "50% of instance-type total"
     static-content: "false"
+<#if !model.isTeamNamespace>
 spec:
   hard:
     pods: 4
@@ -38,3 +39,4 @@ spec:
     </#if>
   scopes:
   - Terminating
+</#if>

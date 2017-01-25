@@ -25,8 +25,10 @@ metadata:
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project"
     static-content: "true"
+<#if model.qualityOfService == "burstable">
 spec:
   hard:
-    pods: 4
+    pods: 0
   scopes:
   - BestEffort
+</#if>

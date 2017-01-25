@@ -30,48 +30,47 @@ public class CLIOptions {
     private Map<String, Pair<Integer, Integer>> lines;
     private String instanceType;
     private String qualityOfService;
-    private Integer nodeCores;
-    private Integer nodeMemory;
-    private Integer nodeReservedCores;
-    private Integer nodeReservedMemory;
     private Integer nodeWorkerCount;
+    private Boolean isTeamNamespace;
+    private Integer requestRatio;
     private URI outputPath;
 
-    public CLIOptions(Map<String, Pair<Integer, Integer>> lines, String instanceType, String qualityOfService, Integer nodeCores, Integer nodeMemory, Integer nodeReservedCores,
-                      Integer nodeReservedMemory, Integer nodeWorkerCount, URI outputPath) {
+    public CLIOptions(Map<String, Pair<Integer, Integer>> lines, String instanceType, String qualityOfService,
+                      Integer nodeWorkerCount, Boolean isTeamNamespace, Integer requestRatio, URI outputPath) {
         this.lines = lines;
         this.instanceType = instanceType;
         this.qualityOfService = qualityOfService;
-        this.nodeCores = nodeCores;
-        this.nodeMemory = nodeMemory;
-        this.nodeReservedCores = nodeReservedCores;
-        this.nodeReservedMemory = nodeReservedMemory;
         this.outputPath = outputPath;
+        this.isTeamNamespace = isTeamNamespace;
+        this.requestRatio = requestRatio;
         this.nodeWorkerCount = nodeWorkerCount;
     }
 
     public QuotaLimitModel calculate() {
         Pair<Integer, Integer> instanceTypeLine = lines.get(instanceType);
 
-        Integer instanceCore = instanceTypeLine.getLeft();
-        Integer instanceMemory = instanceTypeLine.getRight();
-
-        Integer allocatableNodeCores = nodeCores - nodeReservedCores;
-        Integer allocatableNodeMemory = nodeMemory - nodeReservedMemory;
-
-        Integer instanceCoreOrNodeCore = instanceCore > allocatableNodeCores ? allocatableNodeCores : instanceCore;
-        Integer instanceMemoryOrNodeMemory = instanceMemory > allocatableNodeMemory ? allocatableNodeMemory : instanceMemory;
+        Integer instanceCoreInMillis = instanceTypeLine.getLeft() * 1000;
+        Integer instanceMemoryInMb = instanceTypeLine.getRight() * 1000;
 
         QuotaLimitModel quotaLimitModel = new QuotaLimitModel();
+
         quotaLimitModel.setInstanceType(instanceType);
         quotaLimitModel.setQualityOfService(qualityOfService);
-        quotaLimitModel.setAllocatableNodeCores(allocatableNodeCores);
-        quotaLimitModel.setAllocatableNodeMemory(allocatableNodeMemory);
-        quotaLimitModel.setMaxPods(((instanceMemory * 1000) / 500) * nodeWorkerCount);
-        quotaLimitModel.setTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 30);
-        quotaLimitModel.setTerminatingPodMemory(((instanceMemoryOrNodeMemory * 1000) / 100) * 30);
-        quotaLimitModel.setMaxOrNotTerminatingPodCPU(((instanceCoreOrNodeCore * 1000) / 100) * 80);
-        quotaLimitModel.setMaxOrNotTerminatingPodMemory(((instanceMemoryOrNodeMemory * 1000) / 100) * 80);
+        quotaLimitModel.setAllocatableNodeCores(instanceCoreInMillis);
+        quotaLimitModel.setAllocatableNodeMemory(instanceMemoryInMb);
+        quotaLimitModel.setMaxPods(Double.valueOf(Math.floor((instanceMemoryInMb / 500) * nodeWorkerCount)).intValue());
+
+        quotaLimitModel.setTerminatingPodCPU(Double.valueOf(Math.floor(instanceCoreInMillis * 0.5)).intValue());
+        quotaLimitModel.setTerminatingPodMemory(Double.valueOf(Math.floor(instanceMemoryInMb * 0.5)).intValue());
+
+        quotaLimitModel.setMaxOrNotTerminatingPodLimitCPU(instanceCoreInMillis * requestRatio);
+        quotaLimitModel.setMaxOrNotTerminatingPodLimitMemory(instanceMemoryInMb * requestRatio);
+        quotaLimitModel.setMaxOrNotTerminatingPodRequestCPU(instanceCoreInMillis);
+        quotaLimitModel.setMaxOrNotTerminatingPodRequestMemory(instanceMemoryInMb);
+
+        quotaLimitModel.setIsTeamNamespace(isTeamNamespace);
+        quotaLimitModel.setCpuRequestRatio(requestRatio);
+        quotaLimitModel.setMemoryRequestRatio(requestRatio);
         quotaLimitModel.setOutputPath(outputPath);
 
         return quotaLimitModel;
@@ -83,10 +82,6 @@ public class CLIOptions {
             .append("lines", lines)
             .append("instanceType", instanceType)
             .append("qualityOfService", qualityOfService)
-            .append("nodeCores", nodeCores)
-            .append("nodeMemory", nodeMemory)
-            .append("nodeReservedCores", nodeReservedCores)
-            .append("nodeReservedMemory", nodeReservedMemory)
             .append("nodeWorkerCount", nodeWorkerCount)
             .append("calculate", calculate())
             .toString();

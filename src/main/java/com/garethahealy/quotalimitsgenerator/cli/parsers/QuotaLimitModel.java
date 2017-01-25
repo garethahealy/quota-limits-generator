@@ -32,10 +32,13 @@ public class QuotaLimitModel {
     private Integer maxPods;
     private Integer terminatingPodCPU;
     private Integer terminatingPodMemory;
-    private Integer maxOrNotTerminatingPodCPU;
-    private Integer maxOrNotTerminatingPodMemory;
-    private Integer cpuRequestRatio = 3;
-    private Integer memoryRequestRatio = 3;
+    private Integer maxOrNotTerminatingPodLimitCPU;
+    private Integer maxOrNotTerminatingPodLimitMemory;
+    private Integer maxOrNotTerminatingPodRequestCPU;
+    private Integer maxOrNotTerminatingPodRequestMemory;
+    private Integer cpuRequestRatio;
+    private Integer memoryRequestRatio;
+    private Boolean isTeamNamespace;
     private URI outputPath;
 
     public QuotaLimitModel() {
@@ -98,20 +101,28 @@ public class QuotaLimitModel {
         this.terminatingPodMemory = terminatingPodMemory;
     }
 
-    public Integer getMaxOrNotTerminatingPodCPU() {
-        return maxOrNotTerminatingPodCPU;
+    public Integer getMaxOrNotTerminatingPodLimitCPU() {
+        return maxOrNotTerminatingPodLimitCPU;
     }
 
-    public void setMaxOrNotTerminatingPodCPU(Integer maxOrNotTerminatingPodCPU) {
-        this.maxOrNotTerminatingPodCPU = maxOrNotTerminatingPodCPU;
+    public void setMaxOrNotTerminatingPodLimitCPU(Integer maxOrNotTerminatingPodLimitCPU) {
+        this.maxOrNotTerminatingPodLimitCPU = maxOrNotTerminatingPodLimitCPU;
     }
 
-    public Integer getMaxOrNotTerminatingPodMemory() {
-        return maxOrNotTerminatingPodMemory;
+    public Integer getMaxOrNotTerminatingPodLimitMemory() {
+        return maxOrNotTerminatingPodLimitMemory;
     }
 
-    public void setMaxOrNotTerminatingPodMemory(Integer maxOrNotTerminatingPodMemory) {
-        this.maxOrNotTerminatingPodMemory = maxOrNotTerminatingPodMemory;
+    public void setMaxOrNotTerminatingPodLimitMemory(Integer maxOrNotTerminatingPodLimitMemory) {
+        this.maxOrNotTerminatingPodLimitMemory = maxOrNotTerminatingPodLimitMemory;
+    }
+
+    public void setMaxOrNotTerminatingPodRequestCPU(Integer maxOrNotTerminatingPodRequestCPU) {
+        this.maxOrNotTerminatingPodRequestCPU = maxOrNotTerminatingPodRequestCPU;
+    }
+
+    public void setMaxOrNotTerminatingPodRequestMemory(Integer maxOrNotTerminatingPodRequestMemory) {
+        this.maxOrNotTerminatingPodRequestMemory = maxOrNotTerminatingPodRequestMemory;
     }
 
     public Integer getCpuRequestRatio() {
@@ -128,6 +139,22 @@ public class QuotaLimitModel {
 
     public void setMemoryRequestRatio(Integer memoryRequestRatio) {
         this.memoryRequestRatio = memoryRequestRatio;
+    }
+
+    public Boolean getIsTeamNamespace() {
+        return isTeamNamespace;
+    }
+
+    public void setIsTeamNamespace(Boolean isTeamNamespace) {
+        this.isTeamNamespace = isTeamNamespace;
+    }
+
+    public Integer getMaxOrNotTerminatingPodRequestCPU() {
+        return maxOrNotTerminatingPodRequestCPU;
+    }
+
+    public Integer getMaxOrNotTerminatingPodRequestMemory() {
+        return maxOrNotTerminatingPodRequestMemory;
     }
 
     public URI getOutputPath() {
@@ -148,10 +175,13 @@ public class QuotaLimitModel {
             .append("maxPods", maxPods)
             .append("terminatingPodCPU", terminatingPodCPU)
             .append("terminatingPodMemory", terminatingPodMemory)
-            .append("maxOrNotTerminatingPodCPU", maxOrNotTerminatingPodCPU)
-            .append("maxOrNotTerminatingPodMemory", maxOrNotTerminatingPodMemory)
+            .append("maxOrNotTerminatingPodLimitCPU", maxOrNotTerminatingPodLimitCPU)
+            .append("maxOrNotTerminatingPodLimitMemory", maxOrNotTerminatingPodLimitMemory)
+            .append("maxOrNotTerminatingPodRequestCPU", maxOrNotTerminatingPodRequestCPU)
+            .append("maxOrNotTerminatingPodRequestMemory", maxOrNotTerminatingPodRequestMemory)
             .append("cpuRequestRatio", cpuRequestRatio)
             .append("memoryRequestRatio", memoryRequestRatio)
+            .append("isTeamNamespace", isTeamNamespace)
             .append("outputPath", outputPath)
             .toString();
     }

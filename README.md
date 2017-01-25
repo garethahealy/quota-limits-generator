@@ -11,8 +11,7 @@ mvn clean install
 ## Run
     java -jar target/quota-limits-generator-parent-*-jar-with-dependencies.jar \
         --instance-type-csv file:$(PWD)/data/instancetypes.csv --quality-of-service besteffort --instance-type small \
-        --node-cores 4 --node-memory 8 --node-reserved-cores 1 --node-reserved-memory 2 \
-        --node-worker-count 2 \
+        --node-worker-count 2 --is-team-namespace true --request-ratio 3 \
         --output ${PWD}/output
         
 # Run Released Version
@@ -20,6 +19,5 @@ mvn clean install
     
     java -jar quota-limits-generator.jar \
         --instance-type-csv file:$(PWD)/data/instancetypes.csv --quality-of-service besteffort --instance-type small \
-        --node-cores 4 --node-memory 8 --node-reserved-cores 1 --node-reserved-memory 2 \
-        --node-worker-count 2 \
+        --node-worker-count 2 --is-team-namespace true --request-ratio 3 \
         --output ${PWD}/output

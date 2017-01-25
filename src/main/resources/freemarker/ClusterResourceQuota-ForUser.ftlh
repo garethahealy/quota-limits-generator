@@ -26,8 +26,9 @@ metadata:
     quality-of-service: "${model.qualityOfService}"
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project-group"
-    pods-calculation: "memory / 500mb + 3"
+    pods-calculation: "(memory / 500mb) * nodeWorkerCount"
     static-content: "false"
+<#if model.isTeamNamespace>
 spec:
   quota:
     hard:
@@ -37,3 +38,4 @@ spec:
   selector:
     annotations:
       openshift.io/requester: admin
+</#if>

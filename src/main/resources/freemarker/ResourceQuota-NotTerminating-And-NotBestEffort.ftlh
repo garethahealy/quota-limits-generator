@@ -25,16 +25,17 @@ metadata:
     instance-type: "${model.instanceType}"
     applicable-strategy: "per-project-group"
     creation-strategy: "per-project"
-    limits-calculation: "80% of instance-type total, or node total if instance-type > node"
     static-content: "false"
 <#if model.qualityOfService == "burstable">
+<#if !model.isTeamNamespace>
 spec:
   hard:
-    requests.cpu: "${model.maxOrNotTerminatingPodCPU?c}m"
-    requests.memory: "${model.maxOrNotTerminatingPodMemory?c}Mi"
-    limits.cpu: "${model.maxOrNotTerminatingPodCPU?c}m"
-    limits.memory: "${model.maxOrNotTerminatingPodMemory?c}Mi"
+    requests.cpu: "${model.maxOrNotTerminatingPodRequestCPU?c}m"
+    requests.memory: "${model.maxOrNotTerminatingPodRequestMemory?c}Mi"
+    limits.cpu: "${model.maxOrNotTerminatingPodLimitCPU?c}m"
+    limits.memory: "${model.maxOrNotTerminatingPodLimitMemory?c}Mi"
   scopes:
   - NotTerminating
   - NotBestEffort
+</#if>
 </#if>

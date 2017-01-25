@@ -25,23 +25,21 @@ metadata:
     instance-type: "${model.instanceType}"
     applicable-strategy: "cluster-wide"
     creation-strategy: "per-project"
-    limits-calculation: "80% of instance-type total, or node total if instance-type > node"
     static-content: "false"
+<#if model.qualityOfService == "burstable">
 spec:
   limits:
   - type: Container
     min:
-      cpu: "100m"
-      memory: "100Mi"
-    max:
-      cpu: "${model.maxOrNotTerminatingPodCPU?c}m"
-      memory: "${model.maxOrNotTerminatingPodMemory?c}Mi"
+      cpu: "10m"
+      memory: "10Mi"
     default:
-      cpu: "${model.maxOrNotTerminatingPodCPU?c}m"
-      memory: "${model.maxOrNotTerminatingPodMemory?c}Mi"
+      cpu: "${(10 * model.cpuRequestRatio)?c}m"
+      memory: "${(10 * model.memoryRequestRatio)?c}Mi"
     defaultRequest:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: "10m"
+      memory: "10Mi"
     maxLimitRequestRatio:
       cpu: ${model.cpuRequestRatio?c}
       memory: ${model.memoryRequestRatio?c}
+</#if>

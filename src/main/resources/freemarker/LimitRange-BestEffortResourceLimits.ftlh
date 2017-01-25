@@ -25,6 +25,7 @@ metadata:
     applicable-strategy: "cluster-wide"
     creation-strategy: "per-project"
     static-content: "true"
+<#if model.qualityOfService == "besteffort">
 spec:
   limits:
   - type: Container
@@ -34,3 +35,4 @@ spec:
     defaultRequest:
       cpu: "10m"
       memory: "10Mi"
+</#if>
