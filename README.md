@@ -40,6 +40,7 @@ Path to instance type CSV
 --instance-type-csv file:$(PWD)/data/instancetypes.csv 
 ```
 
+Quality of service required for the project
 * besteffort = no requests or limits required to be set.
 * burstable = forces the developer to use requests and limits
 
@@ -61,6 +62,8 @@ Whether the limits/quotas apply to a group of OCP projects (true) or just a sing
 How much the limit can be above the request, i.e.: 
 * request = 10mb
 * limit = 30mb MAX
+
+In the above example, if you requested a limit of 31mb, the pod would fail.
 ```Bash
 --request-ratio 3
 ```
