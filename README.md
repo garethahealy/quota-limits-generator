@@ -24,7 +24,7 @@ java -jar target/quota-limits-generator-parent-*-jar-with-dependencies.jar \
 ## From Release
 ### Run
 ```Bash
-    curl -L http://central.maven.org/maven2/com/garethahealy/quota-limits-generator/quota-limits-generator-parent/1.0.0/quota-limits-generator-parent-1.0.0-jar-with-dependencies.jar -o quota-limits-generator.jar
+    curl -L http://central.maven.org/maven2/com/garethahealy/quota-limits-generator/quota-limits-generator-parent/1.0.1/quota-limits-generator-parent-1.0.1-jar-with-dependencies.jar -o quota-limits-generator.jar
 ```
 ```Bash
 java -jar quota-limits-generator.jar \
