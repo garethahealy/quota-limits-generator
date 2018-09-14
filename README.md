@@ -51,7 +51,7 @@ How much CPU and memory to use
 ```Bash
 --instance-type small
 ```
-Number of ndoes in the cluster
+Number of nodes in the cluster
 ```Bash
 --node-worker-count 2 
 ```
