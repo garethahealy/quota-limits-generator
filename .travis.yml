@@ -1,4 +1,3 @@
-sudo: required
 dist: trusty
 addons:
   sonarqube:
@@ -14,8 +13,9 @@ env:
 language: java
 jdk:
 - oraclejdk8
-install:
+before_install:
 - bash .travis/deploy-codesigning.sh
+install:
 - mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
 - java -version && javac -version && ./mvnw -version -B
 before_script:
@@ -30,4 +30,3 @@ deploy:
 cache:
   directories:
   - $HOME/.m2
-  - $HOME/.victims
